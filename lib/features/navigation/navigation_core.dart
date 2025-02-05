@@ -3,7 +3,6 @@ import 'package:money_manager/core/constants/app_theme.dart';
 import 'package:money_manager/features/transactions/transaction_option_bottom_sheet.dart';
 import 'package:money_manager/features/transactions/transaction_page.dart';
 import 'package:money_manager/features/navigation/navigation_bottom.dart';
-import 'package:money_manager/features/transactions/transaction_form_bottom_sheet.dart';
 import 'package:money_manager/features/wallets/wallet_page.dart';
 
 class NavigationCore extends StatefulWidget {
