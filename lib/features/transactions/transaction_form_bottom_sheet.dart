@@ -8,8 +8,12 @@ import 'package:money_manager/core/widgets/text_field/create_text_field.dart';
 import 'package:intl/intl.dart';
 
 class TransactionFormBottomSheet extends StatefulWidget {
-  final int mode; // mode 0 = add data, mode 1 = outcome
-  final int? type; //type 1 = income, type 2 = outcome
+  /// mode 0 = add data, mode 1 = outcome
+  final int mode;
+
+  ///type 1 = income, type 2 = outcome
+  final int? type;
+
   final String? id;
   final Map<String, dynamic>? data;
   const TransactionFormBottomSheet(
@@ -29,11 +33,20 @@ class _TransactionFormBottomSheetState
   final TextEditingController timeController = TextEditingController();
   final TextEditingController typeController = TextEditingController();
 
-  String getFormattedResult(String value) {
+  String getFormattedTextType(String value) {
     if (value == '1') {
       return 'Income';
     } else if (value == '2') {
       return 'Outcome';
+    }
+    return '';
+  }
+
+  String getFormattedInitialType(String value) {
+    if (value == 'Income') {
+      return '1';
+    } else if (value == 'Outcome') {
+      return '2';
     }
     return '';
   }
@@ -44,10 +57,12 @@ class _TransactionFormBottomSheetState
     updateTime();
 
     if (widget.mode == 0) {
-      typeController.text = getFormattedResult(widget.type!.toString());
+      typeController.text = getFormattedTextType(widget.type!.toString());
     }
 
     if (widget.mode == 1) {
+      typeController.text =
+          getFormattedTextType(widget.data!['type'].toString());
       nameController.text = widget.data!['name'];
       amountController.text = widget.data!['amount'].toString();
       categoryController.text = widget.data!['category'];
@@ -71,13 +86,30 @@ class _TransactionFormBottomSheetState
   Widget build(BuildContext context) {
     return CreateFullBottomSheet(
       onPressed: () {
-        FirestoreService().addTransaction(
-          nameController.text,
-          int.parse(amountController.text),
-          categoryController.text,
-          DateTime.parse(dateController.text),
-          timeController.text,
-        );
+        if (widget.mode == 0) {
+          FirestoreService().addTransaction(
+            int.parse(getFormattedInitialType(typeController.text)),
+            nameController.text,
+            int.parse(amountController.text),
+            categoryController.text,
+            DateTime.parse(dateController.text),
+            timeController.text,
+          );
+        }
+
+        if (widget.mode == 1) {
+          final dateFormat = DateFormat("dd MMMM yyyy");
+
+          FirestoreService().updateTransaction(
+            widget.id!,
+            int.parse(getFormattedInitialType(typeController.text)),
+            nameController.text,
+            int.parse(amountController.text),
+            categoryController.text,
+            dateFormat.parse(dateController.text),
+            timeController.text,
+          );
+        }
         Navigator.pop(context);
       },
       body: Padding(

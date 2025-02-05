@@ -1,15 +1,20 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:intl/intl.dart';
 import 'package:money_manager/core/constants/app_theme.dart';
 import 'package:money_manager/core/services/firestore_service.dart';
 import 'package:money_manager/core/widgets/app_bar/create_app_bar.dart';
+import 'package:money_manager/features/transactions/loading_transaction_wallet.dart';
 import 'package:money_manager/features/transactions/transaction_form_bottom_sheet.dart';
 
 class TransactionPage extends StatelessWidget {
-  const TransactionPage({super.key});
+  final FirestoreService transactionService = FirestoreService();
+
+  TransactionPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    DateTime today = DateTime.now();
     return Scaffold(
       body: Stack(
         children: [
@@ -60,7 +65,7 @@ class TransactionPage extends StatelessWidget {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             Text(
-                              amount,
+                              NumberFormat('#,###').format(int.parse(amount)),
                               style: const TextStyle(fontSize: 14.0),
                             ),
                             const SizedBox(width: 5),
@@ -109,46 +114,73 @@ class TransactionPage extends StatelessWidget {
                         BoxShadow(color: Colors.grey, offset: Offset(0.5, 0.5)),
                       ],
                     ),
-                    child: const Padding(
-                      padding: EdgeInsets.all(16.0),
+                    child: Padding(
+                      padding: const EdgeInsets.all(16.0),
                       child: Center(
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceAround,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.center,
+                        child: FutureBuilder<Map<String, int>>(
+                          future:
+                              transactionService.getTotalAmountForDate(today),
+                          builder: (context, snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              // return Text("TOlolo");
+                              return const LoadingTransactionWallet();
+                            }
+
+                            if (snapshot.hasError) {
+                              return Center(
+                                  child: Text('Error: ${snapshot.error}'));
+                            }
+
+                            if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                              return const Center(
+                                  child: Text('No transactions for today.'));
+                            }
+
+                            final totalIncome = snapshot.data!['income'] ?? 0;
+                            final totalOutcome = snapshot.data!['outcome'] ?? 0;
+                            print(totalIncome);
+                            return Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
-                                Text("Income"),
-                                Row(
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
                                   children: [
-                                    Icon(
-                                      Icons.arrow_upward_rounded,
-                                      color: Colors.green,
-                                      size: 15,
+                                    const Text("Income"),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.arrow_upward_rounded,
+                                          color: Colors.green,
+                                          size: 15,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(NumberFormat('#,###')
+                                            .format(totalIncome)),
+                                      ],
                                     ),
-                                    SizedBox(width: 5),
-                                    Text("1,200,000"),
+                                  ],
+                                ),
+                                Column(
+                                  children: [
+                                    const Text("Outcome"),
+                                    Row(
+                                      children: [
+                                        const Icon(
+                                          Icons.arrow_downward_rounded,
+                                          color: Colors.red,
+                                          size: 15,
+                                        ),
+                                        const SizedBox(width: 5),
+                                        Text(NumberFormat('#,###')
+                                            .format(totalOutcome)),
+                                      ],
+                                    ),
                                   ],
                                 ),
                               ],
-                            ),
-                            Column(
-                              children: [
-                                Text("Outcome"),
-                                Row(
-                                  children: [
-                                    Icon(
-                                      Icons.arrow_downward_rounded,
-                                      color: Colors.red,
-                                      size: 15,
-                                    ),
-                                    SizedBox(width: 5),
-                                    Text("3,000,000"),
-                                  ],
-                                ),
-                              ],
-                            ),
-                          ],
+                            );
+                          },
                         ),
                       ),
                     ),

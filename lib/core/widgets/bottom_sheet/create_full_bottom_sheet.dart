@@ -20,7 +20,7 @@ class CreateFullBottomSheet extends StatelessWidget {
     return BottomSheetFactory(
       widget: SizedBox(
         width: double.infinity,
-        height: MediaQuery.of(context).size.height * 0.75,
+        height: MediaQuery.of(context).size.height * 0.85,
         child: Scaffold(
           backgroundColor: Colors.white,
           body: SingleChildScrollView(child: body),

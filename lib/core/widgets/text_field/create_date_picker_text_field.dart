@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:money_manager/core/widgets/text_field/text_field_factory.dart';
 
 class CreateDatePickerTextField extends StatelessWidget {
@@ -7,13 +8,15 @@ class CreateDatePickerTextField extends StatelessWidget {
   final DateTime? firstDate;
   final DateTime? lastDate;
 
-  const CreateDatePickerTextField({
+  CreateDatePickerTextField({
     super.key,
     required this.controller,
     required this.label,
     this.firstDate,
     this.lastDate,
   });
+
+  final dateFormat = DateFormat("dd MMMM yyyy");
 
   @override
   Widget build(BuildContext context) {
@@ -29,7 +32,7 @@ class CreateDatePickerTextField extends StatelessWidget {
         DateTime? pickedDate = await showDatePicker(
           context: context,
           initialDate: controller.text.isNotEmpty
-              ? DateTime.parse(controller.text)
+              ? dateFormat.parse(controller.text)
               : DateTime.now(),
           firstDate: firstDate ?? DateTime(1910),
           lastDate: lastDate ?? DateTime.now(),

@@ -15,8 +15,8 @@ class NavigationCore extends StatefulWidget {
 class _NavigationCoreState extends State<NavigationCore> {
   int _currentIndex = 0;
   final List<Widget> _pages = [
-    const TransactionPage(),
-    const WalletPage(),
+    TransactionPage(),
+    WalletPage(),
     const Center(child: Text('Settings Page')),
   ];
 
