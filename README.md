@@ -1,6 +1,6 @@
 # money_manager
 
-A new Flutter project.
+Flutter Project using clean architecture and firebase
 
 ## Getting Started
 
