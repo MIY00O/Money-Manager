@@ -23,7 +23,7 @@ class CreateFullBottomSheet extends StatelessWidget {
         height: MediaQuery.of(context).size.height * 0.75,
         child: Scaffold(
           backgroundColor: Colors.white,
-          body: body,
+          body: SingleChildScrollView(child: body),
           bottomNavigationBar: Container(
             decoration: const BoxDecoration(
               color: Colors.white,
@@ -38,11 +38,21 @@ class CreateFullBottomSheet extends StatelessWidget {
             ),
             padding:
                 const EdgeInsets.only(right: 12.0, left: 12.0, bottom: 12.0),
-            child: ElevatedButton(
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: buttonColor ?? AppTheme.primaryColor),
-              onPressed: onPressed,
-              child: Text(buttonLabel ?? 'Save'),
+            child: SizedBox(
+              width: double.infinity,
+              child: ElevatedButton(
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: AppTheme.primaryColor,
+                  shape: const RoundedRectangleBorder(
+                    borderRadius: BorderRadius.all(Radius.circular(10)),
+                  ),
+                ),
+                onPressed: onPressed,
+                child: Text(
+                  buttonLabel ?? 'Save',
+                  style: const TextStyle(color: Colors.white),
+                ),
+              ),
             ),
           ),
         ),

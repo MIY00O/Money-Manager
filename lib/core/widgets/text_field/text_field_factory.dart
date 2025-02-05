@@ -7,6 +7,7 @@ class TextFieldFactory extends StatelessWidget {
   final bool? disabled;
   final bool? readOnly;
   final Color? floatingLabelColor;
+  final Color? backgroundColor;
   final TextInputType? keyboardType;
   final int? maxLength;
   final VoidCallback? onTap;
@@ -21,12 +22,15 @@ class TextFieldFactory extends StatelessWidget {
     this.keyboardType,
     this.maxLength,
     this.onTap,
+    this.backgroundColor,
   });
 
   @override
   Widget build(BuildContext context) {
     return TextField(
       decoration: InputDecoration(
+        filled: backgroundColor != null ? true : false,
+        fillColor: backgroundColor,
         labelText: label,
         labelStyle: TextStyle(
           color: (controller.text.isEmpty)

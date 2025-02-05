@@ -1,7 +1,9 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:money_manager/core/constants/app_theme.dart';
+import 'package:money_manager/core/services/firestore_service.dart';
 import 'package:money_manager/core/widgets/app_bar/create_app_bar.dart';
-import 'package:money_manager/features/transactions/presentation/widget/transaction_form_bottom_sheet.dart';
+import 'package:money_manager/features/transactions/transaction_form_bottom_sheet.dart';
 
 class TransactionPage extends StatelessWidget {
   const TransactionPage({super.key});
@@ -11,37 +13,66 @@ class TransactionPage extends StatelessWidget {
     return Scaffold(
       body: Stack(
         children: [
-          ListView.builder(
-            padding: const EdgeInsets.only(top: 180, bottom: 30),
-            itemCount: 50,
-            itemBuilder: (context, index) {
-              return GestureDetector(
-                onTap: () {
-                  showModalBottomSheet(
-                    context: context,
-                    useSafeArea: true,
-                    isScrollControlled: true,
-                    builder: (BuildContext context) {
-                      return const TransactionFormBottomSheet(mode: 1);
-                    },
-                  );
-                },
-                child: ListTile(
-                  title: Text('Name $index'),
-                  subtitle: const Text("Category"),
-                  trailing: const Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        "+ 1,000,000",
-                        style: TextStyle(fontSize: 14.0),
+          StreamBuilder(
+            stream: FirestoreService().getTransactionStream(),
+            builder: (context, snapshots) {
+              if (snapshots.hasData) {
+                List transactionList = snapshots.data!.docs;
+                DateTime today = DateTime.now();
+                transactionList = transactionList.where((doc) {
+                  DateTime transactionDate =
+                      (doc['date'] as Timestamp).toDate();
+                  return transactionDate.year == today.year &&
+                      transactionDate.month == today.month &&
+                      transactionDate.day == today.day;
+                }).toList();
+
+                return ListView.builder(
+                  itemCount: transactionList.length,
+                  padding: const EdgeInsets.only(top: 180, bottom: 30),
+                  itemBuilder: (context, index) {
+                    DocumentSnapshot document = transactionList[index];
+                    String id = document.id;
+                    Map<String, dynamic> data =
+                        document.data() as Map<String, dynamic>;
+                    String name = data['name'];
+                    String category = data['category'];
+                    String amount = data['amount'].toString();
+                    return GestureDetector(
+                      onTap: () {
+                        showModalBottomSheet(
+                          context: context,
+                          useSafeArea: true,
+                          isScrollControlled: true,
+                          builder: (BuildContext context) {
+                            return TransactionFormBottomSheet(
+                              mode: 1,
+                              id: id,
+                              data: data,
+                            );
+                          },
+                        );
+                      },
+                      child: ListTile(
+                        title: Text(name),
+                        subtitle: Text(category),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Text(
+                              amount,
+                              style: const TextStyle(fontSize: 14.0),
+                            ),
+                            const SizedBox(width: 5),
+                            const Icon(Icons.keyboard_arrow_right_rounded),
+                          ],
+                        ),
                       ),
-                      SizedBox(width: 5),
-                      Icon(Icons.keyboard_arrow_right_rounded),
-                    ],
-                  ),
-                ),
-              );
+                    );
+                  },
+                );
+              }
+              return const SizedBox.shrink();
             },
           ),
           Column(
@@ -50,7 +81,7 @@ class TransactionPage extends StatelessWidget {
               const CreateAppBar(
                 centerTitle: true,
                 title: Text(
-                  "Sel, 14 Jan 2025",
+                  "",
                   style: TextStyle(color: Colors.white),
                 ),
               ),

@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:money_manager/core/constants/app_theme.dart';
-import 'package:money_manager/features/navigation/presentation/widgets/navigation_core.dart';
+import 'package:money_manager/features/navigation/navigation_core.dart';
 import 'package:money_manager/firebase_options.dart';
 
 void main() async {

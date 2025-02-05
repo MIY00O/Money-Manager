@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:money_manager/core/constants/app_theme.dart';
-import 'package:money_manager/features/transactions/presentation/pages/transaction_page.dart';
-import 'package:money_manager/features/navigation/presentation/widgets/navigation_bottom.dart';
-import 'package:money_manager/features/transactions/presentation/widget/transaction_form_bottom_sheet.dart';
-import 'package:money_manager/features/wallets/presentation/pages/wallet_page.dart';
+import 'package:money_manager/features/transactions/transaction_option_bottom_sheet.dart';
+import 'package:money_manager/features/transactions/transaction_page.dart';
+import 'package:money_manager/features/navigation/navigation_bottom.dart';
+import 'package:money_manager/features/transactions/transaction_form_bottom_sheet.dart';
+import 'package:money_manager/features/wallets/wallet_page.dart';
 
 class NavigationCore extends StatefulWidget {
   const NavigationCore({super.key});
@@ -31,7 +32,7 @@ class _NavigationCoreState extends State<NavigationCore> {
             useSafeArea: true,
             isScrollControlled: true,
             builder: (BuildContext context) {
-              return const TransactionFormBottomSheet(mode: 0);
+              return const TransactionOptionBottomSheet();
             },
           );
         },
