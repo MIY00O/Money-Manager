@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class ButtonFactory extends StatelessWidget {
   final VoidCallback onPressed;
-  final Color backgrounColor;
+  final Color backgroundColor;
   final String label;
   final Color? labelColor;
   final bool? fullsize;
@@ -10,7 +10,7 @@ class ButtonFactory extends StatelessWidget {
   const ButtonFactory({
     super.key,
     required this.onPressed,
-    required this.backgrounColor,
+    required this.backgroundColor,
     required this.label,
     required this.labelColor,
     this.fullsize,
@@ -22,7 +22,7 @@ class ButtonFactory extends StatelessWidget {
       width: fullsize == true ? double.infinity : null,
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(
-          backgroundColor: backgrounColor,
+          backgroundColor: backgroundColor,
           shape: const RoundedRectangleBorder(
             borderRadius: BorderRadius.all(Radius.circular(10)),
           ),

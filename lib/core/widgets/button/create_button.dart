@@ -6,7 +6,7 @@ class CreateButton extends ButtonFactory {
     super.key,
     required super.onPressed,
     required super.label,
-    super.backgrounColor = AppTheme.primaryColor,
+    super.backgroundColor = AppTheme.primaryColor,
     super.fullsize,
     super.labelColor,
   });

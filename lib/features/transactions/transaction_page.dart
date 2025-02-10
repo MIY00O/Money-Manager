@@ -5,7 +5,7 @@ import 'package:money_manager/core/constants/app_theme.dart';
 import 'package:money_manager/core/services/firestore_service.dart';
 import 'package:money_manager/core/widgets/app_bar/create_app_bar.dart';
 import 'package:money_manager/features/transactions/loading_transaction_wallet.dart';
-import 'package:money_manager/features/transactions/transaction_form_bottom_sheet.dart';
+import 'package:money_manager/features/transactions/transaction_select_bottom_sheet.dart';
 
 class TransactionPage extends StatelessWidget {
   final FirestoreService transactionService = FirestoreService();
@@ -50,8 +50,7 @@ class TransactionPage extends StatelessWidget {
                           useSafeArea: true,
                           isScrollControlled: true,
                           builder: (BuildContext context) {
-                            return TransactionFormBottomSheet(
-                              mode: 1,
+                            return TransactionSelectBottomSheet(
                               id: id,
                               data: data,
                             );
@@ -97,7 +96,7 @@ class TransactionPage extends StatelessWidget {
                   gradient: LinearGradient(
                     stops: [0.6, 0.0],
                     colors: [
-                      AppTheme.secondaryColor,
+                      AppTheme.primaryColor,
                       Color.fromARGB(0, 87, 156, 213),
                     ],
                     begin: Alignment.topCenter,
@@ -126,20 +125,18 @@ class TransactionPage extends StatelessWidget {
                               // return Text("TOlolo");
                               return const LoadingTransactionWallet();
                             }
-
                             if (snapshot.hasError) {
                               return Center(
-                                  child: Text('Error: ${snapshot.error}'));
+                                child: Text('Error: ${snapshot.error}'),
+                              );
                             }
-
                             if (!snapshot.hasData || snapshot.data!.isEmpty) {
                               return const Center(
-                                  child: Text('No transactions for today.'));
+                                child: Text('No transactions for today.'),
+                              );
                             }
-
                             final totalIncome = snapshot.data!['income'] ?? 0;
                             final totalOutcome = snapshot.data!['outcome'] ?? 0;
-                            print(totalIncome);
                             return Row(
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
@@ -151,7 +148,7 @@ class TransactionPage extends StatelessWidget {
                                       children: [
                                         const Icon(
                                           Icons.arrow_upward_rounded,
-                                          color: Colors.green,
+                                          color: AppTheme.successColor,
                                           size: 15,
                                         ),
                                         const SizedBox(width: 5),
@@ -168,7 +165,7 @@ class TransactionPage extends StatelessWidget {
                                       children: [
                                         const Icon(
                                           Icons.arrow_downward_rounded,
-                                          color: Colors.red,
+                                          color: AppTheme.dangerColor,
                                           size: 15,
                                         ),
                                         const SizedBox(width: 5),

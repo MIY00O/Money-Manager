@@ -54,6 +54,12 @@ class FirestoreService {
     return transactionStream;
   }
 
+  Stream<QuerySnapshot> getAllTotalTransaction() {
+    final transactionStream =
+        transaction.orderBy('date', descending: true).snapshots();
+    return transactionStream;
+  }
+
   /// GET
   Future<Map<String, int>> getTotalAmountForDate(DateTime date) async {
     final startOfDay = DateTime(date.year, date.month, date.day);
@@ -113,6 +119,29 @@ class FirestoreService {
     };
   }
 
+  Future<Map<String, int>> getAllTotalAmount() async {
+    final querySnapshot = await transaction.get();
+
+    int totalIncome = 0;
+    int totalOutcome = 0;
+
+    for (var doc in querySnapshot.docs) {
+      int type = doc['type'];
+      int amount = doc['amount'];
+
+      if (type == 1) {
+        totalIncome += amount;
+      } else if (type == 2) {
+        totalOutcome += amount;
+      }
+    }
+
+    return {
+      'income': totalIncome,
+      'outcome': totalOutcome,
+    };
+  }
+
   /// UPDATE
   Future<void> updateTransaction(String id, int type, String name, int amount,
       String category, DateTime date, String time) {
@@ -124,5 +153,10 @@ class FirestoreService {
       'date': date,
       'time': time,
     });
+  }
+
+  /// DELETE
+  Future<void> deleteTransaction(String id) {
+    return transaction.doc(id).delete();
   }
 }

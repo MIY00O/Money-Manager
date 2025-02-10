@@ -39,7 +39,7 @@ class CreateDatePickerTextField extends StatelessWidget {
         );
 
         if (pickedDate != null) {
-          controller.text = "${pickedDate.toLocal()}".split(' ')[0];
+          controller.text = dateFormat.format(pickedDate);
         } else {
           WidgetsBinding.instance.addPostFrameCallback((_) {
             FocusScope.of(context).unfocus();

@@ -35,7 +35,7 @@ class _NavigationCoreState extends State<NavigationCore> {
             },
           );
         },
-        backgroundColor: AppTheme.secondaryColor,
+        backgroundColor: AppTheme.containerPriColor,
         shape: const CircleBorder(),
         child: const Icon(Icons.add, color: Colors.white),
       ),

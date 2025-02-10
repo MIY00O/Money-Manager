@@ -30,15 +30,16 @@ class NavigationBottom extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.payment_rounded,
-                    color:
-                        currentIndex == 0 ? Colors.white : Colors.grey.shade400,
+                    color: currentIndex == 0
+                        ? Colors.white
+                        : AppTheme.secondaryColor,
                   ),
                   Text(
                     'Transactions',
                     style: TextStyle(
                       color: currentIndex == 0
                           ? Colors.white
-                          : Colors.grey.shade400,
+                          : AppTheme.secondaryColor,
                     ),
                   ),
                 ],
@@ -52,15 +53,16 @@ class NavigationBottom extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.wallet,
-                    color:
-                        currentIndex == 1 ? Colors.white : Colors.grey.shade400,
+                    color: currentIndex == 1
+                        ? Colors.white
+                        : AppTheme.secondaryColor,
                   ),
                   Text(
                     'Wallets  ',
                     style: TextStyle(
                       color: currentIndex == 1
                           ? Colors.white
-                          : Colors.grey.shade400,
+                          : AppTheme.secondaryColor,
                     ),
                   ),
                 ],
@@ -74,15 +76,16 @@ class NavigationBottom extends StatelessWidget {
                 children: [
                   Icon(
                     Icons.settings,
-                    color:
-                        currentIndex == 2 ? Colors.white : Colors.grey.shade400,
+                    color: currentIndex == 2
+                        ? Colors.white
+                        : AppTheme.secondaryColor,
                   ),
                   Text(
                     'Settings',
                     style: TextStyle(
                       color: currentIndex == 2
                           ? Colors.white
-                          : Colors.grey.shade400,
+                          : AppTheme.secondaryColor,
                     ),
                   ),
                 ],

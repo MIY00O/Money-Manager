@@ -30,32 +30,38 @@ class WalletPage extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const CreateContainer(
-                backgroundColor: AppTheme.secondaryColor,
+              CreateContainer(
+                backgroundColor: AppTheme.containerPriColor,
                 title: "Total",
                 desc: "desc",
-                widget: Column(
-                  children: [
-                    CreateListTile(
-                      title: "Total Balance",
-                      trailing: "1,000,000",
-                      icon: Icons.money,
-                    ),
-                    CreateListTile(
-                      title: "Total Incomes",
-                      trailing: "2,000,000",
-                      icon: Icons.arrow_upward_rounded,
-                    ),
-                    CreateListTile(
-                      title: "Total Expenses",
-                      trailing: "1,000,000",
-                      icon: Icons.arrow_downward_rounded,
-                    ),
-                  ],
+                widget: FutureBuilder<Map<String, int>>(
+                  future: transactionService.getAllTotalAmount(),
+                  builder: (context, snapshot) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
+                      return const LoadingWallet();
+                    }
+
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
+
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(
+                        child: Text('No transactions available.'),
+                      );
+                    }
+
+                    final totalIncome = snapshot.data!['income'] ?? 0;
+                    final totalOutcome = snapshot.data!['outcome'] ?? 0;
+
+                    final totalMoney = totalIncome - totalOutcome;
+                    return _listTotal(totalMoney, totalIncome, totalOutcome);
+                  },
                 ),
               ),
               const SizedBox(height: 10),
               CreateContainer(
+                backgroundColor: AppTheme.containerSecColor,
                 title: "Month",
                 desc: "desc",
                 widget: FutureBuilder<Map<String, int>>(
@@ -79,27 +85,7 @@ class WalletPage extends StatelessWidget {
                     final totalOutcome = snapshot.data!['outcome'] ?? 0;
 
                     final totalMoney = totalIncome - totalOutcome;
-                    return Column(
-                      children: [
-                        CreateListTile(
-                          title: "Monthly Balance",
-                          trailing: NumberFormat('#,###').format(totalMoney),
-                          icon: Icons.money,
-                        ),
-                        const SizedBox(height: 5),
-                        CreateListTile(
-                          title: "Monthly Incomes",
-                          trailing: NumberFormat('#,###').format(totalIncome),
-                          icon: Icons.arrow_upward_rounded,
-                        ),
-                        const SizedBox(height: 5),
-                        CreateListTile(
-                          title: "Monthly Expenses",
-                          trailing: NumberFormat('#,###').format(totalOutcome),
-                          icon: Icons.arrow_downward_rounded,
-                        ),
-                      ],
-                    );
+                    return _listTotal(totalMoney, totalIncome, totalOutcome);
                   },
                 ),
               ),
@@ -107,6 +93,30 @@ class WalletPage extends StatelessWidget {
           ),
         ),
       ),
+    );
+  }
+
+  Widget _listTotal(int totalMoney, int totalIncome, int totalOutcome) {
+    return Column(
+      children: [
+        CreateListTile(
+          title: "Total Balance",
+          trailing: NumberFormat('#,###').format(totalMoney),
+          icon: Icons.money,
+        ),
+        const SizedBox(height: 5),
+        CreateListTile(
+          title: "Total Incomes",
+          trailing: NumberFormat('#,###').format(totalIncome),
+          icon: Icons.arrow_upward_rounded,
+        ),
+        const SizedBox(height: 5),
+        CreateListTile(
+          title: "Total Expenses",
+          trailing: NumberFormat('#,###').format(totalOutcome),
+          icon: Icons.arrow_downward_rounded,
+        ),
+      ],
     );
   }
 }

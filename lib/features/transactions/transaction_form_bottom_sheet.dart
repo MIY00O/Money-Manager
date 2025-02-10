@@ -92,7 +92,7 @@ class _TransactionFormBottomSheetState
             nameController.text,
             int.parse(amountController.text),
             categoryController.text,
-            DateTime.parse(dateController.text),
+            DateFormat("dd MMMM yyyy").parse(dateController.text),
             timeController.text,
           );
         }
