@@ -122,7 +122,6 @@ class TransactionPage extends StatelessWidget {
                           builder: (context, snapshot) {
                             if (snapshot.connectionState ==
                                 ConnectionState.waiting) {
-                              // return Text("TOlolo");
                               return const LoadingTransactionWallet();
                             }
                             if (snapshot.hasError) {
